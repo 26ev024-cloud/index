@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodShare | Food Wastage Management</title>
+<style>
+:root{--green:#18794e;--dark:#153b2b;--mint:#eaf7ef;--cream:#fbfdfb;--text:#24332b;--muted:#64746a}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--cream)}
+header{background:white;border-bottom:1px solid #e3eee6;position:sticky;top:0;z-index:3}
+.nav{max-width:1100px;margin:auto;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{font-size:22px;font-weight:800;color:var(--green)}nav a{color:var(--dark);text-decoration:none;margin-left:18px;font-weight:600;font-size:14px}
+.hero{background:linear-gradient(120deg,#eaf7ef,#f6fbf6);padding:58px 22px}
+.hero-inner{max-width:1100px;margin:auto;display:grid;grid-template-columns:1.35fr .85fr;gap:30px;align-items:center}
+h1{font-size:clamp(34px,5vw,52px);line-height:1.08;margin:0 0 18px;color:var(--dark)}
+p{line-height:1.6}.hero p{font-size:17px;color:#52665a;max-width:620px}
+.btn{display:inline-block;background:var(--green);color:white;border:0;border-radius:9px;padding:12px 18px;text-decoration:none;font-weight:700;cursor:pointer}
+.btn.secondary{background:white;color:var(--green);border:1px solid #b8d9c3;margin-left:8px}
+.hero-card{background:white;border:1px solid #dcebe0;border-radius:18px;padding:25px;box-shadow:0 12px 35px #1c563018}
+.hero-card .number{font-size:36px;font-weight:800;color:var(--green)}.section{max-width:1100px;margin:0 auto;padding:42px 22px}
+.section h2{color:var(--dark);font-size:28px;margin:0 0 8px}.sub{color:var(--muted);margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.card{background:white;border:1px solid #e0ebe3;border-radius:14px;padding:19px}
+.tag{display:inline-block;background:var(--mint);color:var(--green);padding:5px 9px;border-radius:20px;font-size:12px;font-weight:700}
+.card h3{margin:12px 0 6px;color:var(--dark)}.meta{font-size:13px;color:var(--muted);margin:5px 0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px}
+button.small{border:0;border-radius:8px;padding:9px 12px;background:var(--green);color:white;cursor:pointer;font-weight:700}
+button.outline{background:white;color:var(--green);border:1px solid #b8d9c3}
+.panel{background:white;border:1px solid #e0ebe3;border-radius:14px;padding:22px;margin-top:20px}
+form{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+label{font-size:13px;font-weight:700;color:#42574a}input,select,textarea{width:100%;margin-top:6px;padding:11px;border:1px solid #cfddd2;border-radius:8px;font:inherit;background:#fff}
+textarea{min-height:82px;resize:vertical}.full{grid-column:1/-1}
+.notice{padding:12px 14px;border-radius:9px;background:#eef8f1;color:#246343;margin-top:12px;display:none}
+footer{background:#153b2b;color:#eaf7ef;padding:25px 22px;text-align:center;margin-top:30px;font-size:13px}
+.empty{color:var(--muted);padding:20px;text-align:center;border:1px dashed #cbd9ce;border-radius:12px}
+@media(max-width:760px){.hero-inner{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.nav{flex-wrap:wrap}nav a{margin:0 10px 0 0}form{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<header><div class="nav"><div class="brand">🥗 FoodShare</div><nav><a href="#donations">Available Food</a><a href="#donate">Donate Food</a><a href="#how">How it works</a></nav></div></header>
+<section class="hero"><div class="hero-inner">
+<div><span class="tag">Share more. Waste less.</span><h1>Good food deserves<br>a second chance.</h1>
+<p>FoodShare connects food donors with NGOs and community groups so that surplus edible food can reach people who need it.</p>
+<a class="btn" href="#donations">Find food</a><a class="btn secondary" href="#donate">Donate food</a></div>
+<div class="hero-card"><div class="number" id="count">3</div><b>sample donations available</b><p>Browse food listings, request a collection, or add a donation. This student project demo stores new listings in this browser only.</p></div>
+</div></section>
+<section class="section" id="donations"><h2>Available food donations</h2><p class="sub">Browse current sample listings and request a pickup.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin:16px 0"><input id="search" placeholder="Search by food or location..." style="max-width:360px"><select id="filter" style="max-width:190px"><option value="">All food types</option><option>Cooked Food</option><option>Vegetables</option><option>Bakery</option><option>Packaged Food</option></select></div>
+<div class="grid" id="listings"></div><div id="empty" class="empty" style="display:none">No matching donations found.</div>
+</section>
+<section class="section" id="donate"><h2>Share surplus food</h2><p class="sub">Donors can submit basic details for a food collection request.</p>
+<div class="panel"><form id="donationForm">
+<div><label>Food name<input name="food" required placeholder="e.g. Vegetable rice"></label></div>
+<div><label>Food type<select name="type" required><option value="">Choose type</option><option>Cooked Food</option><option>Vegetables</option><option>Bakery</option><option>Packaged Food</option></select></label></div>
+<div><label>Quantity<input name="quantity" required placeholder="e.g. 20 meals"></label></div>
+<div><label>Safe-use deadline<input name="deadline" type="datetime-local" required></label></div>
+<div><label>Pickup location<input name="location" required placeholder="Area / street"></label></div>
+<div><label>Contact name<input name="contact" required placeholder="Donor / organization"></label></div>
+<div class="full"><label>Additional details<textarea name="details" placeholder="Preparation time or collection instructions"></textarea></label></div>
+<div class="full"><button class="btn" type="submit">Add donation listing</button><div class="notice" id="success"></div></div>
+</form></div></section>
+<section class="section" id="how"><h2>How FoodShare works</h2><div class="grid">
+<div class="card"><span class="tag">01 · Donor</span><h3>Post a donation</h3><p>Restaurants, shops, event organizers, and individuals list surplus food and collection details.</p></div>
+<div class="card"><span class="tag">02 · Receiver</span><h3>Find and request</h3><p>NGOs and community groups browse available listings and request a suitable donation.</p></div>
+<div class="card"><span class="tag">03 · Collection</span><h3>Coordinate pickup</h3><p>The donor and receiver coordinate collection and update the pickup status.</p></div>
+</div></section>
+<footer>FoodShare — Food Wastage Management System | Student Website Prototype</footer>
+<script>
+const initial=[
+ {food:"Vegetable rice meals",type:"Cooked Food",quantity:"20 meals",deadline:"Today, 7:00 PM",location:"Gummidipoondi",contact:"Community Kitchen",details:"Freshly prepared sample listing."},
+ {food:"Fresh vegetables",type:"Vegetables",quantity:"8 kg",deadline:"Tomorrow, 10:00 AM",location:"Chennai",contact:"Green Grocery",details:"Mixed seasonal vegetables."},
+ {food:"Bread and buns",type:"Bakery",quantity:"30 packs",deadline:"Today, 8:00 PM",location:"Ponneri",contact:"Local Bakery",details:"Packed bakery items."}
+];
+let items=[...initial];
+const list=document.getElementById('listings');
+function render(){
+ const q=document.getElementById('search').value.toLowerCase(), f=document.getElementById('filter').value;
+ const filtered=items.filter(x=>(x.food+" "+x.location).toLowerCase().includes(q)&&(!f||x.type===f));
+ list.innerHTML="";
+ filtered.forEach((x,i)=>{
+  const card=document.createElement('article');card.className='card';
+  card.innerHTML=`<span class="tag">${x.type}</span><h3>${escapeHtml(x.food)}</h3><p class="meta">Quantity: ${escapeHtml(x.quantity)}</p><p class="meta">Pickup: ${escapeHtml(x.location)}</p><p class="meta">Safe-use deadline: ${escapeHtml(x.deadline)}</p><p>${escapeHtml(x.details||"")}</p><div class="actions"><button class="small" data-request="${i}">Request pickup</button></div>`;
+  list.appendChild(card);
+ });
+ document.getElementById('empty').style.display=filtered.length?'none':'block';
+ document.getElementById('count').textContent=items.length;
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+document.getElementById('search').addEventListener('input',render);
+document.getElementById('filter').addEventListener('change',render);
+list.addEventListener('click',e=>{if(e.target.dataset.request!==undefined){const x=items[Number(e.target.dataset.request)];alert('Demo request recorded for: '+x.food+'. Please contact '+x.contact+' to coordinate pickup.');}});
+document.getElementById('donationForm').addEventListener('submit',e=>{
+ e.preventDefault();const d=Object.fromEntries(new FormData(e.target).entries());
+ items.unshift({food:d.food,type:d.type,quantity:d.quantity,deadline:new Date(d.deadline).toLocaleString(),location:d.location,contact:d.contact,details:d.details});
+ render();e.target.reset();const n=document.getElementById('success');n.textContent='Donation listing added to this browser demo.';n.style.display='block';setTimeout(()=>n.style.display='none',4500);
+});
+render();
+</script></body></html>
